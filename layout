@@ -1,0 +1,13 @@
+MEMORY
+{
+	INES:    start =     0, size =   $10, fill=yes, fillval=$00;
+	SMBPRG:  start = $8000, size = $8000, fill=yes, fillval=$FF;
+	SMBCHR:  start =     0, size = $2000, fill=yes, fillval=$FF;
+}
+
+SEGMENTS
+{
+	INES:       load = INES,  type = ro;
+	SMBPRG:     load = SMBPRG, type = ro;
+	SMBCHR:     load = SMBCHR, type = ro;
+}

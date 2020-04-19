@@ -1,0 +1,4 @@
+*.o
+*.nes
+*.dbg
+smb.chr
