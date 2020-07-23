@@ -5,10 +5,12 @@ LD = ld65
 .PHONY: clean
 
 %.o: %.asm
-	$(AS) -g --debug-info $< -o $@
+	$(AS) -g --create-dep "$@.dep" --debug-info $< -o $@
 
 main.nes: layout main.o
 	$(LD) --dbgfile $@.dbg -C $^ -o $@
 
 clean:
-	rm -f main.nes *.o
+	rm -f main.nes *.dep *.o
+
+include $(wildcard *.dep)

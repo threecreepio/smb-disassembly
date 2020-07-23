@@ -1,4 +1,5 @@
 *.o
 *.nes
 *.dbg
+*.dep
 smb.chr
