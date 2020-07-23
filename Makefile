@@ -4,7 +4,7 @@ LD = ld65
 
 .PHONY: clean
 
-%.o: %.asm
+%.o: src/%.asm
 	$(AS) -g --create-dep "$@.dep" --debug-info $< -o $@
 
 main.nes: layout main.o
