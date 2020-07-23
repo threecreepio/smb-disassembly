@@ -1611,10 +1611,9 @@ IncModeTask_B: inc OperMode_Task  ;move onto next mode
 
 GameText:
 TopStatusBarLine:
-  .byte $20, $43, $05, $16, $0a, $1b, $12, $18 ; "MARIO"
-  .byte $20, $52, $0b, $20, $18, $1b, $15, $0d ; "WORLD  TIME"
-  .byte $24, $24, $1d, $12, $16, $0e
-  .byte $20, $68, $05, $00, $24, $24, $2e, $29 ; score trailing digit and coin display
+  .byte $20, $43, $05, "MARIO"
+  .byte $20, $52, $0b, "WORLD  TIME"
+  .byte $20, $68, $05, "0  ", $2e, $29 ; score trailing digit and coin display
   .byte $23, $c0, $7f, $aa ; attribute table data, clears name table 0 to palette 2
   .byte $23, $c2, $01, $ea ; attribute table data, used for coin icon in status bar
   .byte $ff ; end of data block
@@ -1622,29 +1621,25 @@ TopStatusBarLine:
 WorldLivesDisplay:
   .byte $21, $cd, $07, $24, $24 ; cross with spaces used on
   .byte $29, $24, $24, $24, $24 ; lives display
-  .byte $21, $4b, $09, $20, $18 ; "WORLD  - " used on lives display
-  .byte $1b, $15, $0d, $24, $24, $28, $24
+  .byte $21, $4b, $09, "WORLD  - "
   .byte $22, $0c, $47, $24 ; possibly used to clear time up
   .byte $23, $dc, $01, $ba ; attribute table data for crown if more than 9 lives
   .byte $ff
 
 TwoPlayerTimeUp:
-  .byte $21, $cd, $05, $16, $0a, $1b, $12, $18 ; "MARIO"
+  .byte $21, $cd, $05, "MARIO"
 OnePlayerTimeUp:
-  .byte $22, $0c, $07, $1d, $12, $16, $0e, $24, $1e, $19 ; "TIME UP"
+  .byte $22, $0c, $07, "TIME UP"
   .byte $ff
 
 TwoPlayerGameOver:
-  .byte $21, $cd, $05, $16, $0a, $1b, $12, $18 ; "MARIO"
+  .byte $21, $cd, $05, "MARIO"
 OnePlayerGameOver:
-  .byte $22, $0b, $09, $10, $0a, $16, $0e, $24 ; "GAME OVER"
-  .byte $18, $1f, $0e, $1b
+  .byte $22, $0b, $09, "GAME OVER"
   .byte $ff
 
 WarpZoneWelcome:
-  .byte $25, $84, $15, $20, $0e, $15, $0c, $18, $16 ; "WELCOME TO WARP ZONE!"
-  .byte $0e, $24, $1d, $18, $24, $20, $0a, $1b, $19
-  .byte $24, $23, $18, $17, $0e, $2b
+  .byte $25, $84, $15, "WELCOME TO WARP ZONE!"
   .byte $26, $25, $01, $24         ; placeholder for left pipe
   .byte $26, $2d, $01, $24         ; placeholder for middle pipe
   .byte $26, $35, $01, $24         ; placeholder for right pipe
@@ -1653,12 +1648,12 @@ WarpZoneWelcome:
   .byte $ff
 
 LuigiName:
-  .byte $15, $1e, $12, $10, $12    ; "LUIGI", no address or length
+  .byte "LUIGI"
 
 WarpZoneNumbers:
-  .byte $04, $03, $02, $00         ; warp zone numbers, note spaces on middle
-  .byte $24, $05, $24, $00         ; zone, partly responsible for
-  .byte $08, $07, $06, $00         ; the minus world
+  .byte "432", $00         ; warp zone numbers, note spaces on middle
+  .byte " 5 ", $00         ; zone, partly responsible for
+  .byte "876", $00         ; the minus world
 
 GameTextOffsets:
   .byte TopStatusBarLine-GameText, TopStatusBarLine-GameText
@@ -2278,61 +2273,40 @@ BowserPaletteData:
   .byte $00
 
 MarioThanksMessage:
-;"THANK YOU MARIO!"
   .byte $25, $48, $10
-  .byte $1d, $11, $0a, $17, $14, $24
-  .byte $22, $18, $1e, $24
-  .byte $16, $0a, $1b, $12, $18, $2b
+  .byte "THANK YOU MARIO!"
   .byte $00
 
 LuigiThanksMessage:
-;"THANK YOU LUIGI!"
   .byte $25, $48, $10
-  .byte $1d, $11, $0a, $17, $14, $24
-  .byte $22, $18, $1e, $24
-  .byte $15, $1e, $12, $10, $12, $2b
+  .byte "THANK YOU LUIGI!"
   .byte $00
 
 MushroomRetainerSaved:
-;"BUT OUR PRINCESS IS IN"
   .byte $25, $c5, $16
-  .byte $0b, $1e, $1d, $24, $18, $1e, $1b, $24
-  .byte $19, $1b, $12, $17, $0c, $0e, $1c, $1c, $24
-  .byte $12, $1c, $24, $12, $17
-;"ANOTHER CASTLE!"
+  .byte "BUT OUR PRINCESS IS IN"
   .byte $26, $05, $0f
-  .byte $0a, $17, $18, $1d, $11, $0e, $1b, $24
-  .byte $0c, $0a, $1c, $1d, $15, $0e, $2b, $00
+  .byte "ANOTHER CASTLE!"
+  .byte $00
 
 PrincessSaved1:
-;"YOUR QUEST IS OVER."
   .byte $25, $a7, $13
-  .byte $22, $18, $1e, $1b, $24
-  .byte $1a, $1e, $0e, $1c, $1d, $24
-  .byte $12, $1c, $24, $18, $1f, $0e, $1b, $af
+  .byte "YOUR QUEST IS OVER."
   .byte $00
 
 PrincessSaved2:
-;"WE PRESENT YOU A NEW QUEST."
   .byte $25, $e3, $1b
-  .byte $20, $0e, $24
-  .byte $19, $1b, $0e, $1c, $0e, $17, $1d, $24
-  .byte $22, $18, $1e, $24, $0a, $24, $17, $0e, $20, $24
-  .byte $1a, $1e, $0e, $1c, $1d, $af
+  .byte "WE PRESENT YOU A NEW QUEST."
   .byte $00
 
 WorldSelectMessage1:
-;"PUSH BUTTON B"
   .byte $26, $4a, $0d
-  .byte $19, $1e, $1c, $11, $24
-  .byte $0b, $1e, $1d, $1d, $18, $17, $24, $0b
+  .byte "PUSH BUTTON B"
   .byte $00
 
 WorldSelectMessage2:
-;"TO SELECT A WORLD"
   .byte $26, $88, $11
-  .byte $1d, $18, $24, $1c, $0e, $15, $0e, $0c, $1d, $24
-  .byte $0a, $24, $20, $18, $1b, $15, $0d
+  .byte "TO SELECT A WORLD"
   .byte $00
 
 ;-------------------------------------------------------------------------------------
