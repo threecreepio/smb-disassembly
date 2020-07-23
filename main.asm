@@ -8,4 +8,4 @@
 .include "smb.asm"
 
 .segment "SMBCHR"
-.incbin "smb.chr"
+.incbin "Super Mario Bros. (World).nes", $8010
