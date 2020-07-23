@@ -1,20 +1,5 @@
-;SMBDIS.ASM - A COMPREHENSIVE SUPER MARIO BROS. DISASSEMBLY
-;by doppelganger (doppelheathen@gmail.com)
-
-;This file is provided for your own use as-is.  It will require the character rom data
-;and an iNES file header to get it to work.
-
-;There are so many people I have to thank for this, that taking all the credit for
-;myself would be an unforgivable act of arrogance. Without their help this would
-;probably not be possible.  So I thank all the peeps in the nesdev scene whose insight into
-;the 6502 and the NES helped me learn how it works (you guys know who you are, there's no 
-;way I could have done this without your help), as well as the authors of x816 and SMB 
-;Utility, and the reverse-engineers who did the original Super Mario Bros. Hacking Project, 
-;which I compared notes with but did not copy from.  Last but certainly not least, I thank
-;Nintendo for creating this game and the NES, without which this disassembly would
-;only be theory.
-
-;Assembles with x816.
+; This amazing disassembly was created by doppelganger (doppelheathen@gmail.com) here https://www.romhacking.net/documents/344/
+; Ported to CC65 by threecreepio (https://github.com/threecreepio)
 
 ;-------------------------------------------------------------------------------------
 ;DEFINES
@@ -862,8 +847,8 @@ ChkStart:      lda SavedJoypad1Bits   ;check to see if start is pressed
                and #Start_Button      ;on controller 1
                beq ClrPauseTimer
                lda GamePauseStatus    ;check to see if timer flag is set
-               and #%10000000         ;and if so, do not reset timer (residual,
-               bne ExitPause          ;joypad reading routine makes this unnecessary)
+               and #%10000000         ;and if so, do not reset timer
+               bne ExitPause
                lda #$2b               ;set pause timer
                sta GamePauseTimer
                lda GamePauseStatus
@@ -2377,7 +2362,7 @@ JumpEngine:
        iny          ;it will return to the execution before the sub
        lda ($04),y  ;that called this routine
        sta $07
-       jmp ($06)    ;jump to the address we loaded
+       jmp ($0006)  ;jump to the address we loaded
 
 ;-------------------------------------------------------------------------------------
 
@@ -2656,7 +2641,7 @@ ClrSndLoop:  sta SoundMemory,y     ;clear out memory used
 
 InitializeArea:
                ldy #$4b                 ;clear all memory again, only as far as $074b
-               jsr InitializeMemory     ;this is only necessary if branching from
+               jsr InitializeMemory     ;this is only necessary in game mode
                ldx #$21
                lda #$00
 ClrTimersLoop: sta Timers,x             ;clear out memory between
@@ -3667,7 +3652,7 @@ EndMushL: lda #$1b                   ;if at the end, render end of mushroom
           lda #$50
 AllUnder: inx
           ldy #$0f                   ;set $0f to render all way down
-          jmp RenderUnderPart       ;now render the stem of mushroom
+          jmp RenderUnderPart        ;now render the stem of mushroom
 NoUnder:  ldx $07                    ;load row of ledge
           ldy #$00                   ;set 0 for no bottom on this part
           jmp RenderUnderPart
@@ -4630,7 +4615,7 @@ E_GroundArea9:
       .byte $eb, $37, $fe, $2b, $20, $2b, $80, $7b, $38, $ab, $b8
       .byte $77, $86, $fe, $42, $20, $49, $86, $8b, $06, $9b, $80
       .byte $7b, $8e, $5b, $b7, $9b, $0e, $bb, $0e, $9b, $80
-;end of data terminator here is also used by pipe intro area
+;pipe intro area
 E_GroundArea10:
       .byte $ff
 
@@ -5513,7 +5498,7 @@ IntroEntr:  jsr EnterSidePipe         ;execute sub to move player to the right
 EntrMode2:  lda JoypadOverride        ;if controller override bits set here,
             bne VineEntr              ;branch to enter with vine
             lda #$ff                  ;otherwise, set value here then execute sub
-            jsr MovePlayerYAxis       ;to move player upwards (note $ff = -1)
+            jsr MovePlayerYAxis       ;to move player upwards
             lda Player_Y_Position     ;check to see if player is at a specific coordinate
             cmp #$91                  ;if player risen to a certain point (this requires pipes
             bcc PlayerRdy             ;to be at specific height to look/function right) branch
@@ -6180,9 +6165,9 @@ GetXPhy2:  lda MaxRightXSpdData,y     ;get maximum speed to the right
            lda PlayerFacingDir
            cmp Player_MovingDir       ;check facing direction against moving direction
            beq ExitPhy                ;if the same, branch to leave
-           asl FrictionAdderLow       ;otherwise shift d7 of friction adder low into carry
-           rol FrictionAdderHigh      ;then rotate carry onto d0 of friction adder high
-ExitPhy:   rts                        ;and then leave
+           asl FrictionAdderLow       ;otherwise multiply friction by 2
+           rol FrictionAdderHigh      ;then leave
+ExitPhy:   rts
 
 ;-------------------------------------------------------------------------------------
 
@@ -8347,7 +8332,7 @@ DifLoop:  lda PRDiffAdjustData,y     ;get three values and save them
           iny
 UsePosv:  tya                        ;put value from A in Y back to A (they will be lost anyway)
 SetSpSpd: jsr SmallBBox              ;set bounding box control, init attributes, lose contents of A
-          ldy #$02
+          ldy #$02                   ;(putting this call elsewhere will preserve A)
           sta Enemy_X_Speed,x        ;set horizontal speed to zero because previous contents
           cmp #$00                   ;of A were lost...branch here will never be taken for
           bmi SpinyRte               ;the same reason
@@ -13981,7 +13966,7 @@ CheckToMirrorLakitu:
         cmp #Lakitu
         bne CheckToMirrorJSpring    ;branch if not found
         lda VerticalFlipFlag
-        bne NVFLak                  ;branch if vertical flip flag not set
+        bne NVFLak                  ;branch if vertical flip flag set
         lda Sprite_Attributes+16,y  ;save vertical flip and palette bits
         and #%10000001              ;in third row left sprite
         sta Sprite_Attributes+16,y
@@ -14891,10 +14876,10 @@ RunOffscrBitsSubs:
 
 ;--------------------------------
 ;(these apply to these three subsections)
-;$04 - used to store proper offset
+;$04 - used to store offset to sprite object data
 ;$05 - used as adder in DividePDiff
-;$06 - used to store preset value used to compare to pixel difference in $07
-;$07 - used to store difference between coordinates of object and screen edges
+;$06 - used to store constant used to compare to pixel difference in $07
+;$07 - used to store pixel difference between X positions of object and screen edges
 
 XOffscreenBitsData:
         .byte $7f, $3f, $1f, $0f, $07, $03, $01, $00
@@ -14911,9 +14896,9 @@ XOfsLoop: lda ScreenEdge_X_Pos,y      ;get pixel coordinate of edge
           sbc SprObject_X_Position,x  ;and pixel coordinate of object position
           sta $07                     ;store here
           lda ScreenEdge_PageLoc,y    ;get page location of edge
-          sbc SprObject_PageLoc,x     ;subtract from page location of object position
+          sbc SprObject_PageLoc,x     ;subtract page location of object position from it
           ldx DefaultXOnscreenOfs,y   ;load offset value here
-          cmp #$00      
+          cmp #$00
           bmi XLdBData                ;if beyond right edge or in front of left edge, branch
           ldx DefaultXOnscreenOfs+1,y ;if not, load alternate offset value here
           cmp #$01      
@@ -14977,7 +14962,7 @@ DividePDiff:
           lda $07       ;get pixel difference
           cmp $06       ;compare to preset value
           bcs ExDivPD   ;if pixel difference >= preset value, branch
-          lsr           ;divide by eight
+          lsr           ;divide by eight to get tile difference
           lsr
           lsr
           and #$07      ;mask out all but 3 LSB
@@ -15808,7 +15793,7 @@ HandleTriangleMusic:
         lda MusicOffset_Triangle
         dec Tri_NoteLenCounter    ;decrement triangle note length
         bne HandleNoiseMusic      ;is it time for more data?
-        ldy MusicOffset_Triangle  ;increment square 1 music offset and fetch data
+        ldy MusicOffset_Triangle  ;increment triangle music offset and fetch data
         inc MusicOffset_Triangle
         lda (MusicData),y
         beq LoadTriCtrlReg        ;if zero, skip all this and move on to noise 
@@ -15914,7 +15899,7 @@ AlternateLengthHandler:
 ProcessLengthData:
         and #%00000111              ;clear all but the three LSBs
         clc
-        adc $f0                     ;add offset loaded from first header byte
+        adc NoteLenLookupTblOfs     ;add offset loaded from first header byte
         adc NoteLengthTblAdder      ;add extra if time running out music
         tay
         lda MusicLengthLookupTbl,y  ;load length
