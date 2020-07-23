@@ -697,23 +697,17 @@ EndlessLoop: jmp EndlessLoop              ;endless loop, need I say more?
 ;$00 - vram buffer address table low, also used for pseudorandom bit
 ;$01 - vram buffer address table high
 
-VRAM_AddrTable_Low:
-      .byte <VRAM_Buffer1, <WaterPaletteData, <GroundPaletteData
-      .byte <UndergroundPaletteData, <CastlePaletteData, <VRAM_Buffer1_Offset
-      .byte <VRAM_Buffer2, <VRAM_Buffer2, <BowserPaletteData
-      .byte <DaySnowPaletteData, <NightSnowPaletteData, <MushroomPaletteData
-      .byte <MarioThanksMessage, <LuigiThanksMessage, <MushroomRetainerSaved
-      .byte <PrincessSaved1, <PrincessSaved2, <WorldSelectMessage1
-      .byte <WorldSelectMessage2
+.define VRAM_AddrTable \
+      VRAM_Buffer1, WaterPaletteData, GroundPaletteData, \
+      UndergroundPaletteData, CastlePaletteData, VRAM_Buffer1_Offset, \
+      VRAM_Buffer2, VRAM_Buffer2, BowserPaletteData, \
+      DaySnowPaletteData, NightSnowPaletteData, MushroomPaletteData, \
+      MarioThanksMessage, LuigiThanksMessage, MushroomRetainerSaved, \
+      PrincessSaved1, PrincessSaved2, WorldSelectMessage1, \
+      WorldSelectMessage2
 
-VRAM_AddrTable_High:
-      .byte >VRAM_Buffer1, >WaterPaletteData, >GroundPaletteData
-      .byte >UndergroundPaletteData, >CastlePaletteData, >VRAM_Buffer1_Offset
-      .byte >VRAM_Buffer2, >VRAM_Buffer2, >BowserPaletteData
-      .byte >DaySnowPaletteData, >NightSnowPaletteData, >MushroomPaletteData
-      .byte >MarioThanksMessage, >LuigiThanksMessage, >MushroomRetainerSaved
-      .byte >PrincessSaved1, >PrincessSaved2, >WorldSelectMessage1
-      .byte >WorldSelectMessage2
+VRAM_AddrTable_Low: .lobytes VRAM_AddrTable
+VRAM_AddrTable_High: .hibytes VRAM_AddrTable
 
 VRAM_Buffer_Offset:
       .byte <VRAM_Buffer1_Offset, <VRAM_Buffer2_Offset
@@ -2099,11 +2093,9 @@ RemBridge:  lda BlockGfxData,x    ;write top left and top right
 ;-------------------------------------------------------------------------------------
 ;METATILE GRAPHICS TABLE
 
-MetatileGraphics_Low:
-  .byte <Palette0_MTiles, <Palette1_MTiles, <Palette2_MTiles, <Palette3_MTiles
-
-MetatileGraphics_High:
-  .byte >Palette0_MTiles, >Palette1_MTiles, >Palette2_MTiles, >Palette3_MTiles
+.define MetatileGraphics Palette0_MTiles, Palette1_MTiles, Palette2_MTiles, Palette3_MTiles
+MetatileGraphics_Low: .lobytes MetatileGraphics
+MetatileGraphics_High: .hibytes MetatileGraphics
 
 Palette0_MTiles:
   .byte $24, $24, $24, $24 ;blank
@@ -4304,8 +4296,8 @@ GetAreaObjYPosition:
 ;$06-$07 - used to store block buffer address used as indirect
 
 BlockBufferAddr:
-      .byte <Block_Buffer_1, <Block_Buffer_2
-      .byte >Block_Buffer_1, >Block_Buffer_2
+      .lobytes Block_Buffer_1, Block_Buffer_2
+      .hibytes Block_Buffer_1, Block_Buffer_2
 
 GetBlockBufferAddr:
       pha                      ;take value of A, save
@@ -4466,40 +4458,30 @@ World8Areas: .byte $30, $32, $21, $65
 EnemyAddrHOffsets:
       .byte $1f, $06, $1c, $00
 
-EnemyDataAddrLow:
-      .byte <E_CastleArea1, <E_CastleArea2, <E_CastleArea3, <E_CastleArea4, <E_CastleArea5, <E_CastleArea6
-      .byte <E_GroundArea1, <E_GroundArea2, <E_GroundArea3, <E_GroundArea4, <E_GroundArea5, <E_GroundArea6
-      .byte <E_GroundArea7, <E_GroundArea8, <E_GroundArea9, <E_GroundArea10, <E_GroundArea11, <E_GroundArea12
-      .byte <E_GroundArea13, <E_GroundArea14, <E_GroundArea15, <E_GroundArea16, <E_GroundArea17, <E_GroundArea18
-      .byte <E_GroundArea19, <E_GroundArea20, <E_GroundArea21, <E_GroundArea22, <E_UndergroundArea1
-      .byte <E_UndergroundArea2, <E_UndergroundArea3, <E_WaterArea1, <E_WaterArea2, <E_WaterArea3
+.define EnemyDataAddr \
+      E_CastleArea1, E_CastleArea2, E_CastleArea3, E_CastleArea4, E_CastleArea5, E_CastleArea6, \
+      E_GroundArea1, E_GroundArea2, E_GroundArea3, E_GroundArea4, E_GroundArea5, E_GroundArea6, \
+      E_GroundArea7, E_GroundArea8, E_GroundArea9, E_GroundArea10, E_GroundArea11, E_GroundArea12, \
+      E_GroundArea13, E_GroundArea14, E_GroundArea15, E_GroundArea16, E_GroundArea17, E_GroundArea18, \
+      E_GroundArea19, E_GroundArea20, E_GroundArea21, E_GroundArea22, E_UndergroundArea1, \
+      E_UndergroundArea2, E_UndergroundArea3, E_WaterArea1, E_WaterArea2, E_WaterArea3
 
-EnemyDataAddrHigh:
-      .byte >E_CastleArea1, >E_CastleArea2, >E_CastleArea3, >E_CastleArea4, >E_CastleArea5, >E_CastleArea6
-      .byte >E_GroundArea1, >E_GroundArea2, >E_GroundArea3, >E_GroundArea4, >E_GroundArea5, >E_GroundArea6
-      .byte >E_GroundArea7, >E_GroundArea8, >E_GroundArea9, >E_GroundArea10, >E_GroundArea11, >E_GroundArea12
-      .byte >E_GroundArea13, >E_GroundArea14, >E_GroundArea15, >E_GroundArea16, >E_GroundArea17, >E_GroundArea18
-      .byte >E_GroundArea19, >E_GroundArea20, >E_GroundArea21, >E_GroundArea22, >E_UndergroundArea1
-      .byte >E_UndergroundArea2, >E_UndergroundArea3, >E_WaterArea1, >E_WaterArea2, >E_WaterArea3
+EnemyDataAddrLow: .lobytes EnemyDataAddr
+EnemyDataAddrHigh: .hibytes EnemyDataAddr
 
 AreaDataHOffsets:
       .byte $00, $03, $19, $1c
 
-AreaDataAddrLow:
-      .byte <L_WaterArea1, <L_WaterArea2, <L_WaterArea3, <L_GroundArea1, <L_GroundArea2, <L_GroundArea3
-      .byte <L_GroundArea4, <L_GroundArea5, <L_GroundArea6, <L_GroundArea7, <L_GroundArea8, <L_GroundArea9
-      .byte <L_GroundArea10, <L_GroundArea11, <L_GroundArea12, <L_GroundArea13, <L_GroundArea14, <L_GroundArea15
-      .byte <L_GroundArea16, <L_GroundArea17, <L_GroundArea18, <L_GroundArea19, <L_GroundArea20, <L_GroundArea21
-      .byte <L_GroundArea22, <L_UndergroundArea1, <L_UndergroundArea2, <L_UndergroundArea3, <L_CastleArea1
-      .byte <L_CastleArea2, <L_CastleArea3, <L_CastleArea4, <L_CastleArea5, <L_CastleArea6
+.define AreaDataAddr \
+      L_WaterArea1, L_WaterArea2, L_WaterArea3, L_GroundArea1, L_GroundArea2, L_GroundArea3, \
+      L_GroundArea4, L_GroundArea5, L_GroundArea6, L_GroundArea7, L_GroundArea8, L_GroundArea9, \
+      L_GroundArea10, L_GroundArea11, L_GroundArea12, L_GroundArea13, L_GroundArea14, L_GroundArea15, \
+      L_GroundArea16, L_GroundArea17, L_GroundArea18, L_GroundArea19, L_GroundArea20, L_GroundArea21, \
+      L_GroundArea22, L_UndergroundArea1, L_UndergroundArea2, L_UndergroundArea3, L_CastleArea1, \
+      L_CastleArea2, L_CastleArea3, L_CastleArea4, L_CastleArea5, L_CastleArea6
 
-AreaDataAddrHigh:
-      .byte >L_WaterArea1, >L_WaterArea2, >L_WaterArea3, >L_GroundArea1, >L_GroundArea2, >L_GroundArea3
-      .byte >L_GroundArea4, >L_GroundArea5, >L_GroundArea6, >L_GroundArea7, >L_GroundArea8, >L_GroundArea9
-      .byte >L_GroundArea10, >L_GroundArea11, >L_GroundArea12, >L_GroundArea13, >L_GroundArea14, >L_GroundArea15
-      .byte >L_GroundArea16, >L_GroundArea17, >L_GroundArea18, >L_GroundArea19, >L_GroundArea20, >L_GroundArea21
-      .byte >L_GroundArea22, >L_UndergroundArea1, >L_UndergroundArea2, >L_UndergroundArea3, >L_CastleArea1
-      .byte >L_CastleArea2, >L_CastleArea3, >L_CastleArea4, >L_CastleArea5, >L_CastleArea6
+AreaDataAddrLow: .lobytes AreaDataAddr
+AreaDataAddrHigh: .hibytes AreaDataAddr
 
 ;ENEMY OBJECT DATA
 
