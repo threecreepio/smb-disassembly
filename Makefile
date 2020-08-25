@@ -1,19 +1,20 @@
 AS = ca65
 CC = cc65
 LD = ld65
+IPS = flips
 
 .PHONY: clean
 
-build: smb.chr main.nes
+build: patch.ips
 
 %.o: src/%.asm
 	$(AS) -g --create-dep "$@.dep" --debug-info $< -o $@
 
+patch.ips: main.nes
+	$(IPS) --create --ips "main.nes" "Super Mario Bros. (World).nes" "patch.ips"
+
 main.nes: layout main.o
 	$(LD) --dbgfile $@.dbg -C $^ -o $@
-
-smb.chr: Super\ Mario\ Bros.\ (World).nes
-	tail "Super Mario Bros. (World).nes" --bytes=8192 > $@
 
 clean:
 	rm -f main.nes *.dep *.o *.dbg
