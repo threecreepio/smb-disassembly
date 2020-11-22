@@ -11,7 +11,7 @@ build: patch.ips
 	$(AS) -g --create-dep "$@.dep" --debug-info $< -o $@
 
 patch.ips: main.nes
-	$(IPS) --create --ips "main.nes" "Super Mario Bros. (World).nes" "patch.ips"
+	$(IPS) --create --ips "Super Mario Bros. (World).nes" "main.nes" "patch.ips"
 
 main.nes: layout main.o
 	$(LD) --dbgfile $@.dbg -C $^ -o $@
