@@ -5,7 +5,7 @@ IPS = flips
 
 .PHONY: clean
 
-build: patch.ips
+build: main.nes
 
 %.o: src/%.asm
 	$(AS) -g --create-dep "$@.dep" --debug-info $< -o $@
